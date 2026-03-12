@@ -42,6 +42,7 @@ class SalesPredictor:
 
         self.model.fit(X_train, y_train)
         self.is_trained = True
+        self._feature_means = X.mean(axis=0)
 
         r2_train = r2_score(y_train, self.model.predict(X_train))
         y_pred_test = self.model.predict(X_test)
@@ -62,10 +63,17 @@ class SalesPredictor:
         return r2_train, r2_test, rmse_test
 
     def predict(self, budget_pub: float) -> float:
-        """Predict revenue for a single advertising budget value."""
+        """Predict revenue using average values for other features."""
         if not self.is_trained:
             raise RuntimeError("Model is not trained yet. Call train() first.")
-        return float(self.model.predict(np.array([[budget_pub]]))[0])
+        # Build a full feature row using budget_pub + mean values for other features
+        n = self.model.n_features_in_
+        row = np.zeros((1, n))
+        row[0, 0] = budget_pub  # Budget_Pub is first feature
+        if hasattr(self, '_feature_means') and self._feature_means is not None:
+            for i in range(1, n):
+                row[0, i] = self._feature_means[i]
+        return float(self.model.predict(row)[0])
 
     def predict_batch(self, X: np.ndarray) -> np.ndarray:
         """Predict revenue for a full feature matrix."""
