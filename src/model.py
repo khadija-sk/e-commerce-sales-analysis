@@ -62,16 +62,20 @@ class SalesPredictor:
         print(f"   RMSE     : {rmse_test:.2f} EUR")
         return r2_train, r2_test, rmse_test
 
-    def predict(self, budget_pub: float) -> float:
-        """Predict revenue using average values for other features."""
+    def predict(self, prix_unitaire: float, quantite: float = 1.0) -> float:
+        """Predict revenue given prix_unitaire and quantite.
+        Uses mean values for time-based features (Mois_Num, Jour_Semaine).
+        Features order: [Prix_Unitaire, Quantite, Mois_Num, Jour_Semaine]
+        """
         if not self.is_trained:
             raise RuntimeError("Model is not trained yet. Call train() first.")
-        # Build a full feature row using budget_pub + mean values for other features
         n = self.model.n_features_in_
         row = np.zeros((1, n))
-        row[0, 0] = budget_pub  # Budget_Pub is first feature
+        row[0, 0] = prix_unitaire   # Feature 0: Prix_Unitaire
+        row[0, 1] = quantite        # Feature 1: Quantite
+        # Fill remaining features (Mois_Num, Jour_Semaine) with training means
         if hasattr(self, '_feature_means') and self._feature_means is not None:
-            for i in range(1, n):
+            for i in range(2, n):
                 row[0, i] = self._feature_means[i]
         return float(self.model.predict(row)[0])
 

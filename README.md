@@ -1,8 +1,9 @@
-# e-commerce-sales-analysis
 # E-Commerce Sales Analysis & Prediction
 
-A full end-to-end data science project : data preprocessing, business analytics,
+A full end-to-end data science project: data preprocessing, business analytics,
 customer segmentation, machine learning, and a REST API built with FastAPI.
+
+> **Real dataset** — 6,978 transactions from an international clothing boutique (2021–2022)
 
 ---
 
@@ -11,14 +12,14 @@ customer segmentation, machine learning, and a REST API built with FastAPI.
 ```
 data_project/
 ├── data/
-│   └── dataset.csv          # 10,000 e-commerce transactions
+│   ├── dataset.csv           # Synthetic dataset (10,000 transactions)
+│   └── dataset_real.csv      # Real Kaggle dataset (6,978 transactions)
 ├── src/
-│   ├── generate_dataset.py  # Generates the dataset
-│   ├── preprocessing.py     # Data cleaning & feature engineering
-│   ├── model.py             # ML model (Gradient Boosting)
-│   ├── utils.py             # Charts & summaries
-│   ├── main.py              # FastAPI REST API
-│   └── analysis.ipynb       # Full analysis notebook
+│   ├── preprocessing.py      # Data cleaning & feature engineering
+│   ├── model.py              # ML model (Gradient Boosting)
+│   ├── utils.py              # Charts & summaries
+│   ├── main.py               # FastAPI REST API
+│   └── analysis.ipynb        # Full analysis notebook
 └── requirements.txt
 ```
 
@@ -26,11 +27,11 @@ data_project/
 
 ## Features
 
-- Data cleaning and feature engineering with pandas
-- Business KPIs : revenue, profit, ROI, customer segmentation
-- Customer segmentation using a simplified RFM model (VIP / Regular / Occasional)
-- Sales prediction with Gradient Boosting (scikit-learn)
-- REST API with 4 endpoints (FastAPI + Swagger UI)
+- Data cleaning and feature engineering with **pandas**
+- Business KPIs: revenue, profit, margin, customer segmentation
+- Customer segmentation using a simplified **RFM model** (VIP / Regular / Occasional)
+- Sales prediction with **Gradient Boosting** (scikit-learn) — R² > 0.99
+- REST API with 4 endpoints (**FastAPI** + Swagger UI)
 - Interactive analysis notebook (Jupyter)
 
 ---
@@ -39,8 +40,8 @@ data_project/
 
 **1. Clone the project**
 ```bash
-git clone https://github.com/YOUR_USERNAME/data_project.git
-cd data_project
+git clone https://github.com/khadija-sk/e-commerce-sales-analysis.git
+cd e-commerce-sales-analysis
 ```
 
 **2. Install dependencies**
@@ -48,18 +49,13 @@ cd data_project
 pip install -r requirements.txt
 ```
 
-**3. Generate the dataset**
-```bash
-python src/generate_dataset.py
-```
-
-**4. Launch the API**
+**3. Launch the API**
 ```bash
 uvicorn src.main:app --reload
 ```
-Then open http://127.0.0.1:8000/docs to explore the API interactively.
+Then open [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs) to explore the API interactively via Swagger UI.
 
-**5. Open the notebook**
+**4. Open the notebook**
 ```bash
 jupyter notebook src/analysis.ipynb
 ```
@@ -68,45 +64,87 @@ jupyter notebook src/analysis.ipynb
 
 ## API Endpoints
 
-| Method | Endpoint       | Description                          |
-|--------|----------------|--------------------------------------|
-| GET    | /summary       | Global sales statistics & KPIs       |
-| POST   | /predict       | Predict revenue from ad budget       |
-| GET    | /segments      | RFM customer segmentation            |
-| GET    | /model/info    | Model metrics & feature importance   |
+| Method | Endpoint       | Description                              |
+|--------|----------------|------------------------------------------|
+| GET    | `/`            | API info & available endpoints           |
+| GET    | `/summary`     | Global sales statistics & KPIs           |
+| POST   | `/predict`     | Predict revenue from price & quantity    |
+| GET    | `/segments`    | RFM customer segmentation                |
+| GET    | `/model/info`  | Model metrics & feature importance       |
 
-**Example prediction request:**
+### Example — Predict Revenue
+
+**Request:**
 ```json
 POST /predict
 {
-  "budget_pub": 300.0
+  "prix_unitaire": 1000.0,
+  "quantite": 2.0
 }
 ```
+
+**Response:**
 ```json
 {
-  "budget_pub": 300.0,
-  "predicted_revenue": 87.42,
-  "estimated_profit": -212.58,
+  "prix_unitaire": 1000.0,
+  "quantite": 2.0,
+  "predicted_revenue": 2034.57,
   "algorithm_used": "gradient_boosting"
 }
 ```
+
+### Example — Summary (GET /summary)
+```json
+{
+  "transactions": 6978,
+  "clients_uniques": 59,
+  "produits_uniques": 45,
+  "periode": { "debut": "2021-04-01", "fin": "2022-03-31" },
+  "finance": {
+    "ca_total": 5584334.0,
+    "profit_total": 2512950.3,
+    "marge_moyenne_%": 45.0
+  }
+}
+```
+
+---
+
+## ML Model
+
+The prediction model uses **Gradient Boosting Regressor** from scikit-learn.
+
+| Feature         | Description                        |
+|-----------------|------------------------------------|
+| `Prix_Unitaire` | Unit price of the product          |
+| `Quantite`      | Number of units ordered            |
+| `Mois_Num`      | Month extracted from the date      |
+| `Jour_Semaine`  | Day of week extracted from the date|
+
+**Target:** `CA` (Chiffre d'Affaires — total revenue per transaction)
+
+Training split: **80% train / 20% test** with `random_state=42`.
 
 ---
 
 ## Tech Stack
 
-| Tool         | Usage                        |
-|--------------|------------------------------|
-| Python 3.14  | Core language                |
-| pandas       | Data manipulation            |
-| scikit-learn | Machine learning             |
-| matplotlib   | Data visualization           |
-| FastAPI      | REST API                     |
-| Jupyter      | Interactive analysis         |
+| Tool            | Usage                        |
+|-----------------|------------------------------|
+| Python 3.10+    | Core language                |
+| pandas          | Data manipulation            |
+| scikit-learn    | Machine learning             |
+| matplotlib      | Data visualization           |
+| FastAPI         | REST API                     |
+| Pydantic        | Request validation           |
+| uvicorn         | ASGI server                  |
+| Jupyter         | Interactive analysis         |
 
 ---
 
-## Author : khadija sayoukh 
+## Author
 
-**Your Name**
-[LinkedIn](www.linkedin.com/in/khadija-sayoukh-1a1a94288) | [GitHub](https://github.com/khadija-sk)
+**Khadija Sayoukh**
+
+[![LinkedIn](https://www.linkedin.com/in/khadija-sayoukh-1a1a94288)
+[![GitHub](https://github.com/khadija-sk)
