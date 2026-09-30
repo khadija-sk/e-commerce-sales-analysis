@@ -2,47 +2,30 @@
 
 An end-to-end **Data Science and Machine Learning project** built on a real e-commerce dataset containing **6,978 transactions** from an international clothing boutique between 2021 and 2022.
 
-The project combines **data preprocessing, business analysis, customer segmentation, machine learning, and a REST API** to turn raw sales data into usable insights and predictions.
+The project combines **data preprocessing, business analysis, customer segmentation, machine learning, and a REST API** to transform raw sales data into actionable insights and revenue predictions.
 
 ---
 
 ## Project Overview
 
-The goal of this project is to analyze e-commerce sales performance and build a machine learning model capable of predicting revenue.
+The project follows an end-to-end Data Science workflow:
 
-The project covers the complete workflow:
+**Data Cleaning → Business Analysis → Customer Segmentation → Machine Learning → REST API**
 
-**Raw Data → Cleaning → Analysis → Customer Segmentation → Machine Learning → REST API**
+The main objectives are to:
 
----
-
-## Key Features
-
-* Data cleaning and preprocessing with **Pandas**
-* Feature engineering for sales analysis
-* Business KPIs:
-
-  * Revenue
-  * Profit
-  * Profit margin
-  * Sales performance
-* Customer segmentation using simplified **RFM analysis**
-
-  * VIP
-  * Regular
-  * Occasional
-* Revenue prediction using **Gradient Boosting**
-* Comparison of multiple regression algorithms
-* Interactive exploratory analysis with **Jupyter Notebook**
-* REST API built with **FastAPI**
-* Input validation with **Pydantic**
-* Automatic API documentation with **Swagger UI**
+* Understand sales and customer behavior
+* Calculate key business performance indicators
+* Segment customers based on their purchasing behavior
+* Compare different regression algorithms
+* Build a model for revenue prediction
+* Expose the model through a REST API
 
 ---
 
 ## Dataset
 
-The project uses a real Kaggle dataset containing:
+The project uses a real Kaggle dataset containing sales transactions from an international clothing boutique.
 
 | Metric         |                   Value |
 | -------------- | ----------------------: |
@@ -58,60 +41,99 @@ The repository also contains a synthetic dataset used during development and tes
 
 ---
 
-## Data Analysis
+## Features
 
-The analysis focuses on understanding sales performance through:
+### Data Preprocessing
 
-* Revenue trends
-* Profit and margin analysis
-* Product performance
+* Data cleaning with **Pandas**
+* Missing-value handling
+* Feature engineering
+* Date-based feature extraction
+* Preparation of data for analysis and machine learning
+
+### Business Analysis
+
+The project calculates and analyzes:
+
+* Revenue
+* Profit
+* Profit margin
+* Sales performance
+* Monthly trends
 * Customer behavior
-* Monthly and weekly patterns
-* Customer segmentation
+* Product performance
 
 ### Customer Segmentation
 
-A simplified RFM-based approach is used to classify customers into three groups:
+A simplified **RFM-based approach** is used to classify customers into:
 
-* **VIP** — high-value customers
-* **Regular** — recurring customers with moderate activity
-* **Occasional** — lower-frequency customers
+* **VIP**
+* **Regular**
+* **Occasional**
 
----
+### Machine Learning
 
-## Machine Learning
-
-Three regression algorithms were evaluated:
+The project compares three regression algorithms:
 
 * Linear Regression
 * Random Forest
 * Gradient Boosting
 
-The models were evaluated using:
+The models are evaluated using:
 
 * **R²**
 * **RMSE**
 
-An **80/20 train-test split** with a fixed random state was used to make the evaluation reproducible.
+The final implementation uses **GradientBoostingRegressor** for revenue prediction.
+
+### REST API
+
+The trained model is exposed through a **FastAPI REST API** with:
+
+* Pydantic validation
+* Structured endpoints
+* Automatic Swagger documentation
+* Revenue prediction
+* Dataset summaries
+* Customer segmentation
+* Model information
+
+---
+
+## Machine Learning
+
+### Approach
+
+The dataset is divided using an **80/20 train-test split** with a fixed random state for reproducibility.
+
+The following models were evaluated:
+
+1. Linear Regression
+2. Random Forest
+3. Gradient Boosting
 
 ### Selected Model
 
-The current implementation uses **GradientBoostingRegressor** for revenue prediction.
+The current implementation uses:
+
+```text
+GradientBoostingRegressor
+```
 
 The model achieved an **R² of approximately 0.99 on the test set**.
 
-### Features
+### Features Used
 
-The model uses:
+The model uses the following features:
 
 * `Prix_Unitaire`
 * `Quantite`
 * `Mois_Num`
 * `Jour_Semaine`
 
-Target:
+Target variable:
 
-* `CA` — revenue
+* `CA` — Revenue
 
 ### Feature Importance
 
@@ -120,27 +142,27 @@ Target:
 | Quantity   |       0.66 |
 | Unit Price |       0.34 |
 
-These values represent the model's feature importance in the current implementation.
+These values represent the feature importance reported by the model in the current implementation.
 
 ---
 
 ## REST API
 
-The machine learning model is exposed through a **FastAPI REST API**, making it possible to use the prediction system outside the notebook.
+The machine learning model is integrated into a **FastAPI** application.
 
-### Main Routes
+### API Endpoints
 
-| Method | Endpoint      | Description              |
-| ------ | ------------- | ------------------------ |
-| GET    | `/`           | API information          |
-| GET    | `/summary`    | Dataset summary and KPIs |
-| POST   | `/predict`    | Predict revenue          |
-| GET    | `/segments`   | Customer segmentation    |
-| GET    | `/model/info` | Model information        |
+| Method | Endpoint      | Description                       |
+| ------ | ------------- | --------------------------------- |
+| GET    | `/`           | API information                   |
+| GET    | `/summary`    | Dataset summary and business KPIs |
+| POST   | `/predict`    | Predict revenue                   |
+| GET    | `/segments`   | Customer segmentation             |
+| GET    | `/model/info` | Model information                 |
 
 ### Example Prediction
 
-**Request**
+**Request:**
 
 ```json
 {
@@ -149,7 +171,7 @@ The machine learning model is exposed through a **FastAPI REST API**, making it 
 }
 ```
 
-**Response**
+**Response:**
 
 ```json
 {
@@ -160,62 +182,48 @@ The machine learning model is exposed through a **FastAPI REST API**, making it 
 
 ---
 
-## API Documentation
+## Swagger Documentation
 
-Once the API is running, interactive documentation is available through FastAPI's Swagger interface:
+FastAPI automatically provides interactive API documentation.
+
+After starting the application, open:
 
 ```text
 http://127.0.0.1:8000/docs
 ```
 
-This allows the available endpoints to be tested directly from the browser.
+The Swagger interface allows you to test the API endpoints directly from the browser.
 
 ---
 
 ## Project Structure
 
 ```text
-e-commerce-sales-analysis/
+data_project/
+├── data/
+│   ├── dataset.csv
+│   └── dataset_real.csv
 │
-├── data_project/
-│   ├── data/
-│   │   ├── dataset.csv
-│   │   └── dataset_real.csv
-│   │
-│   ├── src/
-│   │   ├── preprocessing.py
-│   │   ├── model.py
-│   │   ├── utils.py
-│   │   ├── main.py
-│   │   └── analysis.ipynb
-│   │
-│   └── requirements.txt
+├── src/
+│   ├── preprocessing.py
+│   ├── model.py
+│   ├── utils.py
+│   ├── main.py
+│   └── analysis.ipynb
 │
-└── README.md
+└── requirements.txt
 ```
 
----
+### Main Files
 
-## Technologies
-
-### Data & Machine Learning
-
-* Python
-* Pandas
-* Scikit-learn
-* Matplotlib
-
-### Backend
-
-* FastAPI
-* Pydantic
-* Uvicorn
-
-### Development & Analysis
-
-* Jupyter Notebook
-* Git
-* GitHub
+| File               | Description                                  |
+| ------------------ | -------------------------------------------- |
+| `preprocessing.py` | Data cleaning and preprocessing              |
+| `model.py`         | Machine learning models and prediction logic |
+| `utils.py`         | Utility functions                            |
+| `main.py`          | FastAPI application                          |
+| `analysis.ipynb`   | Exploratory data analysis and visualizations |
+| `requirements.txt` | Python dependencies                          |
 
 ---
 
@@ -227,7 +235,7 @@ Clone the repository:
 git clone https://github.com/khadija-sk/e-commerce-sales-analysis.git
 ```
 
-Navigate to the project:
+Navigate to the project directory:
 
 ```bash
 cd e-commerce-sales-analysis
@@ -236,17 +244,17 @@ cd e-commerce-sales-analysis
 Install the dependencies:
 
 ```bash
-pip install -r data_project/requirements.txt
+pip install -r requirements.txt
 ```
 
 ---
 
 ## Run the API
 
-From the project directory:
+Start the FastAPI server:
 
 ```bash
-uvicorn data_project.src.main:app --reload
+uvicorn src.main:app --reload
 ```
 
 The API will be available at:
@@ -265,21 +273,59 @@ http://127.0.0.1:8000/docs
 
 ## Run the Analysis
 
-Open the Jupyter Notebook:
+Launch the Jupyter Notebook:
 
 ```bash
-jupyter notebook data_project/src/analysis.ipynb
+jupyter notebook src/analysis.ipynb
 ```
 
-The notebook contains the exploratory analysis, visualizations, preprocessing, and machine learning workflow.
+The notebook contains the exploratory analysis, visualizations, data processing, and machine learning workflow.
+
+---
+
+## Technologies
+
+### Programming & Data
+
+* Python
+* Pandas
+* Scikit-learn
+* Matplotlib
+
+### Machine Learning
+
+* Linear Regression
+* Random Forest
+* Gradient Boosting
+* R²
+* RMSE
+
+### Backend
+
+* FastAPI
+* Pydantic
+* Uvicorn
+
+### Tools
+
+* Jupyter Notebook
+* Git
+* GitHub
 
 ---
 
 ## Project Objective
 
-This project was built to practice an end-to-end **Data Science workflow**, from raw transactional data to a machine learning model exposed through an API.
+This project was developed to practice a complete **Data Science and Machine Learning workflow**, from raw transactional data to a model exposed through a REST API.
 
-It focuses not only on model training, but also on **data understanding, business analysis, reproducibility, and API integration**.
+The focus was not only on building a predictive model, but also on:
+
+* Understanding the underlying business data
+* Extracting meaningful KPIs
+* Segmenting customers
+* Evaluating different models
+* Building a reusable API
+* Documenting the resulting system
 
 ---
 
@@ -289,5 +335,4 @@ It focuses not only on model training, but also on **data understanding, busines
 
 Engineering Student — Digital Transformation & Artificial Intelligence
 
-* GitHub: https://github.com/khadija-sk
-* LinkedIn: https://www.linkedin.com/in/khadija-sayoukh-1a1a94288
+[GitHub](https://github.com/khadija-sk) · [LinkedIn](https://www.linkedin.com/in/khadija-sayoukh-1a1a94288)
